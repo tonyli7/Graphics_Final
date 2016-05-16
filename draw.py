@@ -11,12 +11,27 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x2, y2, z2 )
 
 def shade(points, x0, y0, x1, y1, x2, y2):
-    y_points = [y0, y1, y2]
-    y_points.sort()
-
-    d_0 = 0
-    for i in range(y0, y1):
+    cors = [[y0,x0], [y1,x1], [y2,x2]]
+    cors.sort()
+    
+    x_b = cors[0][1]
+    x_m = cors[1][1]
+    x_t = cors[2][1]
+    
+    y_b = cors[0][0]
+    y_m = cors[1][0]
+    y_t = cors[2][0]
+    
+    d_0 = x_t - x_b / y_t - y_b
+     
+    for i in range(y_b, y_m):
+        d1 = x_m - x_b / y_m - y_b
+        
+        draw_line(screen, )
         break
+    
+    for i in range(y_m, y_b):
+        d1 = x_t - x_m / y_t - y_m
     
     pass
     
