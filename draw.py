@@ -10,7 +10,7 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x1, y1, z1 )
     add_point( points, x2, y2, z2 )
 
-def shade(points, x0, y0, x1, y1, x2, y2):
+def shade(screen, x0, y0, x1, y1, x2, y2, color):
     cors = [[y0,x0], [y1,x1], [y2,x2]]
     cors.sort()
     
@@ -23,18 +23,31 @@ def shade(points, x0, y0, x1, y1, x2, y2):
     y_t = cors[2][0]
     
     d_0 = x_t - x_b / y_t - y_b
-     
-    for i in range(y_b, y_m):
-        d1 = x_m - x_b / y_m - y_b
-        
-        draw_line(screen, )
-        break
+
+    x_0 = x_b
+    x_1 = x_b
     
-    for i in range(y_m, y_b):
+    y_0 = y_b
+    y_1 = y_b
+    while (y_0 <= int(y_m)):
+        d_1 = x_m - x_b / y_m - y_b
+        
+        x_0 += d_0
+        x_1 += d_1
+        
+        y_0 += 1
+        y_1 += 1
+        #print str(y_0)+"  "+str(y_m)
+        draw_line(screen,x_0, y_0,x_1, y_1, color)
+    
+        
+        
+    """
+    for i in range(y_m, y_t):
         d1 = x_t - x_m / y_t - y_m
     
     pass
-    
+    """    
 def draw_polygons( points, screen, color ):
 
     if len(points) < 3:
@@ -55,7 +68,8 @@ def draw_polygons( points, screen, color ):
             shade(screen,
                   points[p][0], points[p][1],
                   points[p+1][0], points[p+1][1],
-                  points[p+2][0], points[p+2][1])
+                  points[p+2][0], points[p+2][1],
+                  color)
             
         p+= 3
 
