@@ -22,7 +22,7 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
     y_m = cors[1][0]
     y_t = cors[2][0]
     
-    d_0 = x_t - x_b / y_t - y_b
+    d_0 = (x_t - x_b) / (y_t - y_b)
 
     x_0 = x_b
     x_1 = x_b
@@ -30,24 +30,39 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
     y_0 = y_b
     y_1 = y_b
     while (y_0 <= int(y_m)):
-        d_1 = x_m - x_b / y_m - y_b
+        if (y_b == y_m):
+            d_1 = (x_t - x_m) / (y_t - y_m)
+        else:
+            d_1 = (x_m - x_b) / (y_m - y_b)
         
         x_0 += d_0
         x_1 += d_1
         
         y_0 += 1
         y_1 += 1
-        #print str(y_0)+"  "+str(y_m)
+
+        print str(x_0)+" "+str(x_1)
         draw_line(screen,x_0, y_0,x_1, y_1, color)
     
         
         
-    """
-    for i in range(y_m, y_t):
-        d1 = x_t - x_m / y_t - y_m
     
-    pass
-    """    
+    while (y_0 <= int(y_t)):
+        if (y_m == y_b):
+            d_1 = (x_t - x_m) / (y_t - y_m)
+        else:
+            d_1 = (x_m - x_b) / (y_m - y_b)
+
+        x_0 += d_0
+        x_1 += d_1
+        
+        y_0 += 1
+        y_1 += 1
+      
+        draw_line(screen,x_0, y_0,x_1, y_1, color)
+    
+    
+       
 def draw_polygons( points, screen, color ):
 
     if len(points) < 3:
