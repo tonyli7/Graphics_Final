@@ -30,10 +30,13 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
     y_0 = y_b
     y_1 = y_b
     while (y_0 <= int(y_m)):
+        print y_m
         if (y_b == y_m):
             d_1 = (x_t - x_m) / (y_t - y_m)
+            print "y_b == y_m"
         else:
             d_1 = (x_m - x_b) / (y_m - y_b)
+            print "y_b != y_m"
         
         x_0 += d_0
         x_1 += d_1
@@ -46,9 +49,10 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
     
         
         
-    
+    # when y_0 >= y_m
+    """
     while (y_0 <= int(y_t)):
-        if (y_m == y_b):
+        if (y_m == y_t):
             d_1 = (x_t - x_m) / (y_t - y_m)
         else:
             d_1 = (x_m - x_b) / (y_m - y_b)
@@ -60,8 +64,8 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
         y_1 += 1
       
         draw_line(screen,x_0, y_0,x_1, y_1, color)
-    
-    
+
+    """
        
 def draw_polygons( points, screen, color ):
 
