@@ -29,10 +29,10 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
     
     y_0 = y_b
     y_1 = y_b
-    while (y_0 <= int(y_m)):
-        print y_m
+    while (y_0 <= int(y_t)):
         if (y_b == y_m):
             d_1 = (x_t - x_m) / (y_t - y_m)
+            x_1 = x_m
             print "y_b == y_m"
         else:
             d_1 = (x_m - x_b) / (y_m - y_b)
