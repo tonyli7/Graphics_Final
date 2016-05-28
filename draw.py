@@ -33,10 +33,10 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
         if (y_b == y_m):
             d_1 = (x_t - x_m) / (y_t - y_m)
             x_1 = x_m
-            print "y_b == y_m"
+            #print "y_b == y_m"
         else:
             d_1 = (x_m - x_b) / (y_m - y_b)
-            print "y_b != y_m"
+            #print "y_b != y_m"
         
         x_0 += d_0
         x_1 += d_1
@@ -44,7 +44,7 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
         y_0 += 1
         y_1 += 1
 
-        print str(x_0)+" "+str(x_1)
+        #print str(x_0)+" "+str(x_1)
         draw_line(screen,x_0, y_0,x_1, y_1, color)
     
         
