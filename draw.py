@@ -22,16 +22,18 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
     y_m = int(cors[1][0])
     y_t = int(cors[2][0])
     
-    d_0 = (x_t - x_b) / (y_t - y_b)
+    d_0 = (x_t - x_b) / (cors[2][0] - cors[0][0])
 
     x_0 = x_b
     x_1 = x_b
     
     y_0 = y_b
     y_1 = y_b
+
+    print cors
     while (y_0 < y_t):
-        print "y_b: "+str(int(y_b))+" y_m: "+str(int(y_m))+" y_0: "+str(int(y_0))
-        print cors
+        print "y_b: "+str(int(y_b))+" y_m: "+str(int(y_m))+" y_t: "+str(int(y_t))+" y_0: "+str(int(y_0))
+        
         if (y_0 == y_m):
             d_1 = (x_t - x_m) / (y_t - y_m)
             x_1 = x_m
@@ -39,7 +41,7 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
         elif (y_0 < y_m):
             d_1 = (x_m - x_b) / (y_m - y_b)
             #print "y_b != y_m"
-        
+    
         x_0 += d_0
         x_1 += d_1
         
@@ -48,8 +50,6 @@ def shade(screen, x0, y0, x1, y1, x2, y2, color):
 
         #print str(x_0)+" "+str(x_1)
         draw_line(screen,x_0, y_0,x_1, y_1, color)
-    
-        
         
     # when y_0 >= y_m
     """
