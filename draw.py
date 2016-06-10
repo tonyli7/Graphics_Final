@@ -2,15 +2,26 @@ from display import *
 from matrix import *
 from gmath import calculate_dot
 from math import cos, sin, pi
+import sys
 
 MAX_STEPS = 100
+MIN_INT = -sys.maxint - 1
+z_buf = []
+def set_zbuf():
+    for i in range(0,500):
+        z_buf.append([])
+        for j in range(0,500):
+            z_buf[i].append(MIN_INT)
 
+set_zbuf()
+            
+    
 def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x0, y0, z0 )
     add_point( points, x1, y1, z1 )
     add_point( points, x2, y2, z2 )
 
-def shade(screen, x0, y0, x1, y1, x2, y2, color):
+def scan_ln(screen, x0, y0, x1, y1, x2, y2, color):
     cors = [[y0,x0], [y1,x1], [y2,x2]]
     cors.sort()
     
@@ -86,7 +97,7 @@ def draw_polygons( points, screen, color ):
             draw_line( screen, points[p+2][0], points[p+2][1],
                        points[p][0], points[p][1], color )
 
-            shade(screen,
+            scan_ln(screen,
                   points[p][0], points[p][1],
                   points[p+1][0], points[p+1][1],
                   points[p+2][0], points[p+2][1],
@@ -94,7 +105,30 @@ def draw_polygons( points, screen, color ):
             
         p+= 3
 
+def draw_polygons_z( points, screen, color ):
 
+    if len(points) < 3:
+        print 'Need at least 3 points to draw a polygon!'
+        return
+
+    p = 0
+    while p < len( points ) - 2:
+
+        if calculate_dot( points, p ) < 0:
+            draw_line_z( screen, points[p][0], points[p][1], points[p][2]
+                         points[p+1][0], points[p+1][1], points[p+1][2], color )
+            draw_line_z( screen, points[p+1][0], points[p+1][1], points[p+1][2],
+                         points[p+2][0], points[p+2][1], points[p+2][2], color )
+            draw_line_z( screen, points[p+2][0], points[p+2][1], points[p+2][2],
+                         points[p][0], points[p][1], points[p][2], color )
+
+            scan_ln(screen,
+                  points[p][0], points[p][1],
+                  points[p+1][0], points[p+1][1],
+                  points[p+2][0], points[p+2][1],
+                  color)
+            
+        p+= 3
 
 def add_box( points, x, y, z, width, height, depth ):
     x1 = x + width
@@ -424,3 +458,88 @@ def draw_line( screen, x0, y0, x1, y1, color ):
             y = y + 1
             d = d + dx
 
+def draw_line_z( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
+    dx = x1 - x0
+    dy = y1 - y0
+    dz = z1 - z0
+    if dx + dy < 0:
+        dx = 0 - dx
+        dy = 0 - dy
+        tmp = x0
+        x0 = x1
+        x1 = tmp
+        tmp = y0
+        y0 = y1
+        y1 = tmp
+        tmp = z0
+        z0 = z1
+        z1 = tmp
+
+    if dx == 0 and dy == 0:
+        plot_z(screen, color, x0, y0, max(z0, z1), z_buf)
+    elif dx == 0:
+        y = y0
+        z = z0
+        while y <= y1:
+            plot_z(screen, color,  x0, y, z, z_buf)
+            y = y + 1
+            z += dz / dy
+    elif dy == 0:
+        x = x0
+        z = z0
+        while x <= x1:
+            plot_z(screen, color, x, y0, z, z_buf)
+            x = x + 1
+            z += dz / dx
+    elif dy < 0:
+        d = 0
+        x = x0
+        y = y0
+        z = z0
+        while x <= x1:
+            plot_z(screen, color, x, y, z, z_buf)
+            if d > 0:
+                y = y - 1
+                d = d - dx
+            x = x + 1
+            d = d - dy
+            z += dz / dx
+    elif dx < 0:
+        d = 0
+        x = x0
+        y = y0
+        z = z0
+        while y <= y1:
+            plot_z(screen, color, x, y, z, z_buf)
+            if d > 0:
+                x = x - 1
+                d = d - dy
+            y = y + 1
+            d = d - dx
+            z = dz / dy
+    elif dx > dy:
+        d = 0
+        x = x0
+        y = y0
+        z = z0
+        while x <= x1:
+            plot_z(screen, color, x, y, z, z_buf)
+            if d > 0:
+                y = y + 1
+                d = d - dx
+            x = x + 1
+            d = d + dy
+            z = dz / dx
+    else:
+        d = 0
+        x = x0
+        y = y0
+        z = z0
+        while y <= y1:
+            plot_z(screen, color, x, y, z, z_buf)
+            if d > 0:
+                x = x + 1
+                d = d - dy
+            y = y + 1
+            d = d + dx
+            z += dz / dy
