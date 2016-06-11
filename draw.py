@@ -21,6 +21,7 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x1, y1, z1 )
     add_point( points, x2, y2, z2 )
 
+"""
 def scan_ln(screen, x0, y0, x1, y1, x2, y2, color):
     cors = [[y0,x0], [y1,x1], [y2,x2]]
     cors.sort()
@@ -41,17 +42,17 @@ def scan_ln(screen, x0, y0, x1, y1, x2, y2, color):
     y_0 = y_b
     y_1 = y_b
 
-    print cors
+    
     while (y_0 < y_t):
-        print "y_b: "+str(int(y_b))+" y_m: "+str(int(y_m))+" y_t: "+str(int(y_t))+" y_0: "+str(int(y_0))
+       
         
         if (y_0 == y_m):
             d_1 = (x_t - x_m) / (y_t - y_m)
             x_1 = x_m
-            #print "y_b == y_m"
+         
         elif (y_0 < y_m):
             d_1 = (x_m - x_b) / (y_m - y_b)
-            #print "y_b != y_m"
+         
     
         x_0 += d_0
         x_1 += d_1
@@ -59,27 +60,64 @@ def scan_ln(screen, x0, y0, x1, y1, x2, y2, color):
         y_0 += 1
         y_1 += 1
 
-        #print str(x_0)+" "+str(x_1)
+     
         draw_line(screen,x_0, y_0,x_1, y_1, color)
+"""
         
-    # when y_0 >= y_m
-    """
-    while (y_0 <= int(y_t)):
-        if (y_m == y_t):
-            d_1 = (x_t - x_m) / (y_t - y_m)
-        else:
-            d_1 = (x_m - x_b) / (y_m - y_b)
+def scan_ln(screen, x0, y0, z0, x1, y1, z1, x2, y2, z2, color, z_buf):
+    cors = [[y0,x0,z0], [y1,x1,z1], [y2,x2,z2]]
+    cors.sort()
+    
+    x_b = cors[0][1]
+    x_m = cors[1][1]
+    x_t = cors[2][1]
+    
+    y_b = int(cors[0][0])
+    y_m = int(cors[1][0])
+    y_t = int(cors[2][0])
 
-        x_0 += d_0
-        x_1 += d_1
+    z_b = cors[0][2]
+    z_m = cors[0][2]
+    z_t = cors[0][2]
+    
+    dx_0 = (x_t - x_b) / (cors[2][0] - cors[0][0])
+    dz_0 = (z_t - z_b) / (cors[2][0] - cors[0][0])
+
+    x_0 = x_b
+    x_1 = x_b
+    
+    y_0 = y_b
+    y_1 = y_b
+
+    z_0 = z_b
+    z_1 = z_b
+
+    while (y_0 < y_t):
+       
+        
+        if (y_0 == y_m):
+            dx_1 = (x_t - x_m) / (y_t - y_m)
+            dz_1 = (z_t - z_m) / (y_t - y_m)
+            x_1 = x_m
+            z_1 = z_m
+         
+        elif (y_0 < y_m):
+            dx_1 = (x_m - x_b) / (y_m - y_b)
+            dz_1 = (z_m - z_b) / (y_m - y_b)
+            
+        x_0 += dx_0
+        x_1 += dx_1
+
+        z_0 += dz_0
+        z_1 += dz_1
         
         y_0 += 1
         y_1 += 1
-      
-        draw_line(screen,x_0, y_0,x_1, y_1, color)
 
-    """
-       
+     
+        draw_line(screen,x_0, y_0, z_0, x_1, y_1, z_1, color, z_buf)
+
+"""
 def draw_polygons( points, screen, color ):
 
     if len(points) < 3:
@@ -104,8 +142,9 @@ def draw_polygons( points, screen, color ):
                   color)
             
         p+= 3
+"""
 
-def draw_polygons_z( points, screen, color ):
+def draw_polygons( points, screen, color ):
 
     if len(points) < 3:
         print 'Need at least 3 points to draw a polygon!'
@@ -115,18 +154,21 @@ def draw_polygons_z( points, screen, color ):
     while p < len( points ) - 2:
 
         if calculate_dot( points, p ) < 0:
-            draw_line_z( screen, points[p][0], points[p][1], points[p][2]
-                         points[p+1][0], points[p+1][1], points[p+1][2], color )
-            draw_line_z( screen, points[p+1][0], points[p+1][1], points[p+1][2],
-                         points[p+2][0], points[p+2][1], points[p+2][2], color )
-            draw_line_z( screen, points[p+2][0], points[p+2][1], points[p+2][2],
-                         points[p][0], points[p][1], points[p][2], color )
+            if color[2] == 255:
+                color[2]=0
+            color[2]+=1
+            draw_line( screen, points[p][0], points[p][1], points[p][2],
+                         points[p+1][0], points[p+1][1], points[p+1][2], color, z_buf)
+            draw_line( screen, points[p+1][0], points[p+1][1], points[p+1][2],
+                         points[p+2][0], points[p+2][1], points[p+2][2], color, z_buf )
+            draw_line( screen, points[p+2][0], points[p+2][1], points[p+2][2],
+                         points[p][0], points[p][1], points[p][2], color, z_buf )
 
             scan_ln(screen,
-                  points[p][0], points[p][1],
-                  points[p+1][0], points[p+1][1],
-                  points[p+2][0], points[p+2][1],
-                  color)
+                    points[p][0], points[p][1], points[p][2],
+                    points[p+1][0], points[p+1][1], points[p+1][2],
+                    points[p+2][0], points[p+2][1], points[p+2][2],
+                    color, z_buf)
             
         p+= 3
 
@@ -378,8 +420,8 @@ def draw_lines( matrix, screen, color ):
         
     p = 0
     while p < len( matrix ) - 1:
-        draw_line( screen, matrix[p][0], matrix[p][1],
-                   matrix[p+1][0], matrix[p+1][1], color )
+        draw_line( screen, matrix[p][0], matrix[p][1], matrix[p][2],
+                   matrix[p+1][0], matrix[p+1][1], matrix[p+1][2], color , z_buf)
         p+= 2
 
 def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
@@ -389,7 +431,7 @@ def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
 def add_point( matrix, x, y, z=0 ):
     matrix.append( [x, y, z, 1] )
 
-
+"""
 def draw_line( screen, x0, y0, x1, y1, color ):
     dx = x1 - x0
     dy = y1 - y0
@@ -457,8 +499,8 @@ def draw_line( screen, x0, y0, x1, y1, color ):
                 d = d - dy
             y = y + 1
             d = d + dx
-
-def draw_line_z( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
+"""
+def draw_line( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
     dx = x1 - x0
     dy = y1 - y0
     dz = z1 - z0
@@ -476,19 +518,19 @@ def draw_line_z( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
         z1 = tmp
 
     if dx == 0 and dy == 0:
-        plot_z(screen, color, x0, y0, max(z0, z1), z_buf)
+        plot(screen, color, x0, y0, max(z0, z1), z_buf)
     elif dx == 0:
         y = y0
         z = z0
         while y <= y1:
-            plot_z(screen, color,  x0, y, z, z_buf)
+            plot(screen, color,  x0, y, z, z_buf)
             y = y + 1
             z += dz / dy
     elif dy == 0:
         x = x0
         z = z0
         while x <= x1:
-            plot_z(screen, color, x, y0, z, z_buf)
+            plot(screen, color, x, y0, z, z_buf)
             x = x + 1
             z += dz / dx
     elif dy < 0:
@@ -497,7 +539,7 @@ def draw_line_z( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
         y = y0
         z = z0
         while x <= x1:
-            plot_z(screen, color, x, y, z, z_buf)
+            plot(screen, color, x, y, z, z_buf)
             if d > 0:
                 y = y - 1
                 d = d - dx
@@ -510,7 +552,7 @@ def draw_line_z( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
         y = y0
         z = z0
         while y <= y1:
-            plot_z(screen, color, x, y, z, z_buf)
+            plot(screen, color, x, y, z, z_buf)
             if d > 0:
                 x = x - 1
                 d = d - dy
@@ -523,7 +565,7 @@ def draw_line_z( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
         y = y0
         z = z0
         while x <= x1:
-            plot_z(screen, color, x, y, z, z_buf)
+            plot(screen, color, x, y, z, z_buf)
             if d > 0:
                 y = y + 1
                 d = d - dx
@@ -536,7 +578,7 @@ def draw_line_z( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
         y = y0
         z = z0
         while y <= y1:
-            plot_z(screen, color, x, y, z, z_buf)
+            plot(screen, color, x, y, z, z_buf)
             if d > 0:
                 x = x + 1
                 d = d - dy
