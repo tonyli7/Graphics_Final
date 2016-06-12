@@ -63,8 +63,9 @@ def scan_ln(screen, x0, y0, x1, y1, x2, y2, color):
      
         draw_line(screen,x_0, y_0,x_1, y_1, color)
 """
-        
+
 def scan_ln(screen, x0, y0, z0, x1, y1, z1, x2, y2, z2, color, z_buf):
+    
     cors = [[y0,x0,z0], [y1,x1,z1], [y2,x2,z2]]
     cors.sort()
     
@@ -84,13 +85,17 @@ def scan_ln(screen, x0, y0, z0, x1, y1, z1, x2, y2, z2, color, z_buf):
     dz_0 = (z_t - z_b) / (cors[2][0] - cors[0][0])
 
     x_0 = x_b
-    x_1 = x_b
-    
+    z_0 = z_b
+
     y_0 = y_b
     y_1 = y_b
-
-    z_0 = z_b
-    z_1 = z_b
+    if (y_b != y_m):      
+        x_1 = x_b
+        z_1 = z_b
+    else:
+        x_1 = x_m
+        z_1 = z_m
+        
 
     while (y_0 < y_t):
        
@@ -116,6 +121,7 @@ def scan_ln(screen, x0, y0, z0, x1, y1, z1, x2, y2, z2, color, z_buf):
 
      
         draw_line(screen,x_0, y_0, z_0, x_1, y_1, z_1, color, z_buf)
+        
 
 """
 def draw_polygons( points, screen, color ):
@@ -145,7 +151,7 @@ def draw_polygons( points, screen, color ):
 """
 
 def draw_polygons( points, screen, color ):
-
+    color = [0, 255, 0]
     if len(points) < 3:
         print 'Need at least 3 points to draw a polygon!'
         return
@@ -154,6 +160,9 @@ def draw_polygons( points, screen, color ):
     while p < len( points ) - 2:
 
         if calculate_dot( points, p ) < 0:
+            if color[1] <= 0:
+                color[1] = 255
+            color[1] -= 50
             
             draw_line( screen, points[p][0], points[p][1], points[p][2],
                          points[p+1][0], points[p+1][1], points[p+1][2], color, z_buf)
@@ -413,7 +422,7 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         y0 = y
         t+= step
 
-def draw_lines( matrix, screen, color ):
+def draw_lines( matrix, screen, color):
     if len( matrix ) < 2:
         print "Need at least 2 points to draw a line"
         
@@ -512,13 +521,11 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
         tmp = y0
         y0 = y1
         y1 = tmp
-        tmp = z0
-        z0 = z1
-        z1 = tmp
+      
 
-    if dx == 0 and dy == 0:
-        plot(screen, color, x0, y0, max(z0, z1), z_buf)
-    elif dx == 0:
+    #if dx == 0 and dy == 0:
+     #   plot(screen, color, x0, y0, max(z0, z1), z_buf)
+    if dx == 0:
         y = y0
         z = z0
         while y <= y1:
