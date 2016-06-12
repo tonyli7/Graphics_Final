@@ -267,6 +267,7 @@ def run(filename):
                 t = make_translate(xval, yval, zval)
                 matrix_mult( stack[-1], t )
                 stack[-1] = t
+                
                     
             if command[0] == "scale":
                 if command[-1] == "bigenator":
@@ -274,27 +275,32 @@ def run(filename):
                     xval = command[1]*knob[j]["bigenator"]
                     yval = command[1]*knob[j]["bigenator"]
                     zval = command[1]*knob[j]["bigenator"]
-    
-                    t = make_scale(xval, yval, zval)
-                    matrix_mult(stack[-1], t)
-                    stack[-1] = t
+                else:
+                    xval = command[1]
+                    yval = command[2]
+                    zval = command[3]
+
+                t = make_scale(xval, yval, zval)
+                matrix_mult(stack[-1], t)
+                stack[-1] = t
                    
                
                 
             if command[0] == "rotate":
-                if command[-1] == "spinny":
-                   
+                if command[-1] == "spinny":                   
                     angle = command[2] * (math.pi / 180) * knob[j]["spinny"]
-    
-                    if command[1] == 'x':
-                        t = make_rotX( angle )
-                    elif command[1] == 'y':
-                        t = make_rotY( angle )
-                    elif command[1] == 'z':
-                        t = make_rotZ( angle )            
+                else:
+                    angle = command[2] * (math.pi / 180)
+
+                if command[1] == 'x':
+                    t = make_rotX( angle )
+                elif command[1] == 'y':
+                    t = make_rotY( angle )
+                elif command[1] == 'z':
+                    t = make_rotZ( angle )            
                     
-                    matrix_mult( stack[-1], t )
-                    stack[-1] = t
+                matrix_mult( stack[-1], t )
+                stack[-1] = t
                  
 
         if j == 0:

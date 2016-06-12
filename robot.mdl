@@ -1,3 +1,5 @@
+frames 1
+basename simple
 push
 move 250 200 0
 rotate y 360 body

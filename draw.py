@@ -154,9 +154,7 @@ def draw_polygons( points, screen, color ):
     while p < len( points ) - 2:
 
         if calculate_dot( points, p ) < 0:
-            if color[2] == 255:
-                color[2]=0
-            color[2]+=1
+            
             draw_line( screen, points[p][0], points[p][1], points[p][2],
                          points[p+1][0], points[p+1][1], points[p+1][2], color, z_buf)
             draw_line( screen, points[p+1][0], points[p+1][1], points[p+1][2],
@@ -164,12 +162,13 @@ def draw_polygons( points, screen, color ):
             draw_line( screen, points[p+2][0], points[p+2][1], points[p+2][2],
                          points[p][0], points[p][1], points[p][2], color, z_buf )
 
+            
             scan_ln(screen,
                     points[p][0], points[p][1], points[p][2],
                     points[p+1][0], points[p+1][1], points[p+1][2],
                     points[p+2][0], points[p+2][1], points[p+2][2],
                     color, z_buf)
-            
+                 
         p+= 3
 
 def add_box( points, x, y, z, width, height, depth ):

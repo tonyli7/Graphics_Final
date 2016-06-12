@@ -32,8 +32,8 @@ def plot(screen, color, x, y, z, z_buf):
     x = int(x)
     y = int(y)
     newy = YRES - 1 - y
-    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES and z > z_buf[x][y]):
-        z_buf[x][y] = z
+    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES and z > z_buf[x][newy]):
+        z_buf[x][newy] = z
         screen[x][newy] = color[:]
 
     
