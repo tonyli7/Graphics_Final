@@ -257,8 +257,8 @@ def p_statement_rotate(p):
         symbols.append(("knob", p[4]))
 
 def p_statement_fire(p):
-    """statement : FIRE"""
-    commands.append((p[1],))
+    """statement : FIRE NUMBER NUMBER NUMBER"""
+    commands.append(p[1:])
 
 def p_SYMBOL(p):
     """SYMBOL : XYZ

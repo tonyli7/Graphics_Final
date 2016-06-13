@@ -19,36 +19,37 @@ set_zbuf()
 gradient = []
 for i in range(0,20):
     gradient.append([255,255,255])
-for i in range(20, 180):
-    c = [255, i, i%20]
+for i in range(20, 200):
+    c = [255, i/2, i%20]
     gradient.append(c)
-for i in range(180,200):
+for i in range(200,220):
     gradient.append([0,0,0])
 gradient = gradient[::-1]
 
-def fire(screen):
+def fire(screen, length, xcor, ycor):
     #initialization of color array
     c_buf = []
     for i in range(0,100):
         c_buf.append([])
-        for j in range(0,100):
+        for j in range(0,length):
             c_buf[i].append([])
 
     #randomization+setup
-    for x in range(0, 100):
+    for x in range(0, length):
         randcolor = random.randint(0,1)
-        c_buf[99][x] = 199*randcolor
-        if x!=99:
+        c_buf[99][x] = (len(gradient)-1)*randcolor
+        if x <= 99:
             c_buf[x][0] = 0
-            c_buf[x][99] = 0
+            c_buf[x][length-1] = 0
 
     for y in range(98,-1,-1):
-        for t in range(1,99):
+        for t in range(1,length-1):
             c_buf[y][t] = abs((c_buf[y+1][t-1]+c_buf[y+1][t]+c_buf[y+1][t+1])/3 - 1)
 
+    
     for x in range(99,-1,-1):
-        for y in range(99,-1,-1):
-            draw_line1(screen, y, x, y, x, gradient[c_buf[::-1][x][y]])
+        for y in range(length-1,-1,-1):
+            draw_line1(screen, y+xcor, x+ycor, y+xcor, x+ycor, gradient[c_buf[::-1][x][y]])
             
     #calculating values
     
