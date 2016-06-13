@@ -193,6 +193,7 @@ def run(filename):
     for j in range(num_frames):
         stack = [ tmp ]
         for command in commands:
+            print command[0]
             if command[0] == "pop":
                 stack.pop()
             if not stack:
@@ -301,6 +302,9 @@ def run(filename):
                     
                 matrix_mult( stack[-1], t )
                 stack[-1] = t
+            if command[0] == "fire":
+                print "hello"
+                fire(screen)
                  
 
         if j == 0:

@@ -2,11 +2,12 @@ from display import *
 from matrix import *
 from gmath import calculate_dot
 from math import cos, sin, pi
-import sys
+import sys, random
 
 MAX_STEPS = 100
 MIN_INT = -sys.maxint - 1
 z_buf = []
+
 def set_zbuf():
     for i in range(0,500):
         z_buf.append([])
@@ -14,8 +15,44 @@ def set_zbuf():
             z_buf[i].append(MIN_INT)
 
 set_zbuf()
+#initialization of color gradient
+gradient = []
+for i in range(0,20):
+    gradient.append([255,255,255])
+for i in range(20, 180):
+    c = [255, i, i%20]
+    gradient.append(c)
+for i in range(180,200):
+    gradient.append([0,0,0])
+gradient = gradient[::-1]
+
+def fire(screen):
+    #initialization of color array
+    c_buf = []
+    for i in range(0,100):
+        c_buf.append([])
+        for j in range(0,100):
+            c_buf[i].append([])
+
+    #randomization+setup
+    for x in range(0, 100):
+        randcolor = random.randint(0,1)
+        c_buf[99][x] = 199*randcolor
+        if x!=99:
+            c_buf[x][0] = 0
+            c_buf[x][99] = 0
+
+    for y in range(98,-1,-1):
+        for t in range(1,99):
+            c_buf[y][t] = abs((c_buf[y+1][t-1]+c_buf[y+1][t]+c_buf[y+1][t+1])/3 - 1)
+
+    for x in range(99,-1,-1):
+        for y in range(99,-1,-1):
+            draw_line1(screen, y, x, y, x, gradient[c_buf[::-1][x][y]])
             
+    #calculating values
     
+
 def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x0, y0, z0 )
     add_point( points, x1, y1, z1 )
@@ -89,6 +126,8 @@ def scan_ln(screen, x0, y0, z0, x1, y1, z1, x2, y2, z2, color, z_buf):
 
     y_0 = y_b
     y_1 = y_b
+
+    
     if (y_b != y_m):      
         x_1 = x_b
         z_1 = z_b
@@ -439,8 +478,8 @@ def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
 def add_point( matrix, x, y, z=0 ):
     matrix.append( [x, y, z, 1] )
 
-"""
-def draw_line( screen, x0, y0, x1, y1, color ):
+
+def draw_line1( screen, x0, y0, x1, y1, color ):
     dx = x1 - x0
     dy = y1 - y0
     if dx + dy < 0:
@@ -456,19 +495,19 @@ def draw_line( screen, x0, y0, x1, y1, color ):
     if dx == 0:
         y = y0
         while y <= y1:
-            plot(screen, color,  x0, y)
+            plot1(screen, color,  x0, y)
             y = y + 1
     elif dy == 0:
         x = x0
         while x <= x1:
-            plot(screen, color, x, y0)
+            plot1(screen, color, x, y0)
             x = x + 1
     elif dy < 0:
         d = 0
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y)
+            plot1(screen, color, x, y)
             if d > 0:
                 y = y - 1
                 d = d - dx
@@ -479,7 +518,7 @@ def draw_line( screen, x0, y0, x1, y1, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y)
+            plot1(screen, color, x, y)
             if d > 0:
                 x = x - 1
                 d = d - dy
@@ -490,7 +529,7 @@ def draw_line( screen, x0, y0, x1, y1, color ):
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y)
+            plot1(screen, color, x, y)
             if d > 0:
                 y = y + 1
                 d = d - dx
@@ -501,13 +540,13 @@ def draw_line( screen, x0, y0, x1, y1, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y)
+            plot1(screen, color, x, y)
             if d > 0:
                 x = x + 1
                 d = d - dy
             y = y + 1
             d = d + dx
-"""
+
 def draw_line( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
     dx = x1 - x0
     dy = y1 - y0
@@ -521,6 +560,9 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color, z_buf ):
         tmp = y0
         y0 = y1
         y1 = tmp
+        tmp = z0
+        z0 = z1
+        z1 = tmp
       
 
     #if dx == 0 and dy == 0:

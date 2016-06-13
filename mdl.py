@@ -41,7 +41,8 @@ tokens = (
     "DISPLAY", 
     "SCREEN", 
     "WEB", 
-    "CO"
+    "CO",
+    "FIRE"
 )
 
 reserved = {
@@ -85,7 +86,8 @@ reserved = {
     "set_knobs" : "SET_KNOBS", 
     "focal" : "FOCAL", 
     "display" : "DISPLAY", 
-    "web" : "WEB"
+    "web" : "WEB",
+    "fire": "FIRE"
 }
 
 t_ignore = " \t"
@@ -253,6 +255,10 @@ def p_statement_rotate(p):
     else:
         commands.append(tuple(p[1:]))
         symbols.append(("knob", p[4]))
+
+def p_statement_fire(p):
+    """statement : FIRE"""
+    commands.append((p[1],))
 
 def p_SYMBOL(p):
     """SYMBOL : XYZ
