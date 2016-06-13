@@ -169,13 +169,13 @@ def second_pass( commands, num_frames ):
 
 def run(filename):
    
-   
     """
     This function runs an mdl script
     """
     color = [255, 255, 255]
     tmp = new_matrix()
     ident( tmp )
+   
     
     p = mdl.parseFile(filename)
     
@@ -192,6 +192,13 @@ def run(filename):
     
     for j in range(num_frames):
         stack = [ tmp ]
+        z_buf = []
+        MIN_INT = -sys.maxint - 1
+        for i in range(0,500):
+            z_buf.append([])
+            for t in range(0,500):
+                z_buf[i].append(MIN_INT)
+
         for command in commands:
             
             if command[0] == "pop":
@@ -212,19 +219,19 @@ def run(filename):
                 m = []
                 add_sphere(m, command[1], command[2], command[3], command[4], 5)
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, color, z_buf)
     
             if command[0] == "torus":
                 m = []
                 add_torus(m, command[1], command[2], command[3], command[4], command[5], 5)
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, color, z_buf )
     
             if command[0] == "box":                
                 m = []
                 add_box(m, *command[1:])
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, color, z_buf )
     
             if command[0] == "line":
                 m = []

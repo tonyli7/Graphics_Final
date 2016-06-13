@@ -5,16 +5,7 @@ from math import cos, sin, pi
 import sys, random
 
 MAX_STEPS = 100
-MIN_INT = -sys.maxint - 1
-z_buf = []
 
-def set_zbuf():
-    for i in range(0,500):
-        z_buf.append([])
-        for j in range(0,500):
-            z_buf[i].append(MIN_INT)
-
-set_zbuf()
 #initialization of color gradient
 gradient = []
 for i in range(0,20):
@@ -190,7 +181,7 @@ def draw_polygons( points, screen, color ):
         p+= 3
 """
 
-def draw_polygons( points, screen, color ):
+def draw_polygons( points, screen, color, z_buf ):
     color = [0, 255, 0]
     if len(points) < 3:
         print 'Need at least 3 points to draw a polygon!'
